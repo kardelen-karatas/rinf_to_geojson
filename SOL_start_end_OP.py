@@ -1,7 +1,8 @@
 from collections import namedtuple
 import xml.etree.ElementTree as ET
 import json
-from geojson import LineString
+import geojson
+from geojson import LineString, FeatureCollection
 tree = ET.parse('RINFsol_lux_mal_nor.xml')
 
 section_of_lines = tree.findall('.//SectionOfLine')
@@ -31,10 +32,5 @@ for section in section_of_lines:
     sol.end['coords'] = (float(end_op_point_coords.get('Longitude').replace(',', '.')), float(end_op_point_coords.get('Latitude').replace(',', '.')))
     line_strings.append(LineString([sol.start['coords'], sol.end['coords']]))
 
-    print(line_strings)
-
-
-    
-    
-
-
+    feature_collection = FeatureCollection(line_strings)
+    print(geojson.dumps(feature_collection))
